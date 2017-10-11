@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Ypaint</title>
+	<link rel="stylesheet" href="">
+</head>
+<style>
+	canvas{display: block}
+	p{display: inline-block;cursor: pointer;}
+	.active{border: 1px solid #ed4a3c;}
+</style>
+<body>
+	<canvas id="canvas" width="800" height="600"></canvas>
+	<p id="rect" class="active">矩形工具</p>
+	<p id="circle">圆形工具</p>
+	<p id="line">画笔工具</p>
+	<p id="arrow">箭头工具</p>
+	<p id="draw">拖动图片</p>
+	
+</body>
+<script src="./Ypaint.js"></script>
+<script>
+	var paint = Ypaint(document.getElementById('canvas'))
+	document.getElementById('rect').addEventListener('click',function(){
+		paint.isRect = !paint.isRect;
+	})
+	document.getElementById('circle').addEventListener('click',function(){
+		paint.isCircle = !paint.isCircle;
+	})
+	document.getElementById('line').addEventListener('click',function(){
+		paint.isLine = !paint.isLine;
+	})
+	document.getElementById('arrow').addEventListener('click',function(){
+		paint.isArrow = !paint.isArrow;
+	})
+</script>
+</html>
