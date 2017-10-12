@@ -2,6 +2,7 @@
 	console.log("\n %c APlayer 1.6.1 %c http://aplayer.js.org \n\n","color: #fadfa3; background: #030307; padding:5px 0;","background: #fadfa3; padding:5px 0;");
 	function Ypaint(){
 		this.init = function(canvas){
+			this.outer
 			this.isLine = false,
             this.isArrow = false,
             this.isRect = false,
@@ -18,7 +19,7 @@
             this.beginPoint = {};
             this.stopPoint = {}; //circle
             this.storage = {};
-            this.rect = {};
+            this.rect = {}; //
             this.polygonVertex = [];
             this.status = {
                 lineArr: [],
@@ -60,22 +61,22 @@
 			            }
 			            t.clear();
 			            t.redrawAll();
-			            t.drawRect(t.rect.realX, t.rect.realY, t.rect.width, t.rect.height);
+			            t.drawRect(t.rect.realX, t.rect.realY, t.rect.width, t.rect.height, t.rect.radius, t.rect.color,t.rect.lineWidth);
 					}			
 				}
 			}
 
 			this.canvas['on' + t.EndEvent] = function(e) {
 				if(t.isRect){
-					t.status.rectArr.push({ realX: t.rect.realX, realY: t.rect.realY, width: t.rect.width, height: t.rect.height });
+					t.status.rectArr.push({ realX: t.rect.realX, realY: t.rect.realY, width: t.rect.width, height: t.rect.height, radius: t.rect.radius, color: t.rect.color, lineWidth: t.rect.lineWidth});
 					t.rect = {};
 				}
-				
 				t.lock = false;
 			}
 		}
 
-		this.createRect = function(x, y, width, height, radius, color, type) { //绘制圆
+		this.createRect = function(x, y, width, height, radius, color, type ,lineWidth) { //绘制圆
+			console.log(x,y,width,height,radius,color,type,lineWidth)
             this.ctx.beginPath();
             this.ctx.moveTo(x, y + radius);
             this.ctx.lineTo(x, y + height - radius);
@@ -87,12 +88,12 @@
             this.ctx.lineTo(x + radius, y);
             this.ctx.quadraticCurveTo(x, y, x, y + radius);
             this.ctx[type + 'Style'] = color;
+            this.ctx.lineWidth = lineWidth;
             this.ctx.closePath();
             this.ctx[type]();
         },
-        this.drawRect = function(realX, realY, width, height){
-        	this.ctx.lineWidth = 3;
-            this.createRect(realX, realY, width, height, 3, '#e6071d', 'stroke')
+        this.drawRect = function(realX, realY, width, height, radius, color, lineWidth){
+            this.createRect(realX, realY, width, height, radius, color, 'stroke', lineWidth)
         }
         this.clear = function(){
         	this.ctx.clearRect(0, 0, this.w, this.h); //清除画布，左上角为起点
@@ -101,7 +102,8 @@
         	var t = this;
         	if (this.status.rectArr.length > 0) {
                 this.status.rectArr.forEach(function(val) {
-                    t.drawRect(val.realX, val.realY, val.width, val.height)
+                	console.log(val)
+                    t.drawRect(val.realX, val.realY, val.width, val.height, val.radius, val.color, val.lineWidth)
                 })
             }
         }
