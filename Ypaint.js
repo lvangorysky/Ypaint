@@ -31,7 +31,6 @@
                 arrowArr: [],
                 circleArr: [],
                 rectArr: [],
-                imgArr: [],
             };
             this.bind()
 		}
@@ -46,7 +45,10 @@
                 if(t.isRect){
                 	t.rect.x = _x;
 	            	t.rect.y = _y;
-                }
+                } else if (t.isCircle) {
+                    t.storage.x = _x;
+                    t.storage.y = _y;
+                } 
 			}
 
 			this.canvas['on' + t.MoveEvent] = function(e) {
@@ -67,7 +69,23 @@
 			            t.clear();
 			            t.redrawAll();
 			            t.drawRect(t.rect.realX, t.rect.realY, t.rect.width, t.rect.height, t.outerParams.rect.radius, t.outerParams.rect.color,t.outerParams.rect.lineWidth);
-					}			
+					} else if (t.isCircle) {
+                        if (t.storage.x > e.offsetX) {
+                            var pointX = t.storage.x - Math.abs(t.storage.x - e.offsetX) / 2;
+                        } else {
+                            var pointX = Math.abs(t.storage.x - e.offsetX) / 2 + t.storage.x;
+                        }
+                        if (t.storage.y > e.offsetY) {
+                            var pointY = t.storage.y - Math.abs(t.storage.y - e.offsetY) / 2;
+                        } else {
+                            var pointY = Math.abs(t.storage.y - e.offsetY) / 2 + t.storage.y;
+                        }
+                        var lineX = Math.abs(t.storage.x - e.offsetX) / 2;
+                        var lineY = Math.abs(t.storage.y - e.offsetY) / 2
+                        t.clear();
+                        t.redrawAll();
+                        t.drawEllipse(pointX, pointY, lineX, lineY, t.outerParams.circle.lineWidth ,t.outerParams.circle.color);
+                    } 			
 				}
 			}
 
@@ -75,7 +93,23 @@
 				if(t.isRect){
 					t.status.rectArr.push({ realX: t.rect.realX, realY: t.rect.realY, width: t.rect.width, height: t.rect.height, radius: t.outerParams.rect.radius, color: t.outerParams.rect.color, lineWidth: t.outerParams.rect.lineWidth});
 					t.rect = {};
-				}
+				}else if (t.isCircle) {
+                    if (t.storage.x > e.offsetX) {
+                        var pointX = t.storage.x - Math.abs(t.storage.x - e.offsetX) / 2;
+                    } else {
+                        var pointX = Math.abs(t.storage.x - e.offsetX) / 2 + t.storage.x;
+                    }
+                    if (t.storage.y > e.offsetY) {
+                        var pointY = t.storage.y - Math.abs(t.storage.y - e.offsetY) / 2;
+                    } else {
+                        var pointY = Math.abs(t.storage.y - e.offsetY) / 2 + t.storage.y;
+                    }
+                    var lineX = Math.abs(t.storage.x - e.offsetX) / 2;
+                    var lineY = Math.abs(t.storage.y - e.offsetY) / 2;
+                    t.status.circleArr.push({ x: pointX, y: pointY, a: lineX, b: lineY, color: t.outerParams.circle.color, lineWidth: t.outerParams.circle.lineWidth});
+                    console.log(t.status)
+                    t.storage = {};
+                }
 				t.lock = false;
 			}
 		}
@@ -99,6 +133,15 @@
         this.drawRect = function(realX, realY, width, height, radius, color, lineWidth){
             this.createRect(realX, realY, width, height, radius, color, 'stroke', lineWidth)
         }
+        this.drawEllipse = function(x, y, a, b, lineWidth, color) {
+            this.ctx.beginPath();
+            this.ctx.ellipse(x, y, a, b, 0, 0, 2 * Math.PI);
+            this.ctx.lineWidth = lineWidth;
+            this.ctx.fillStyle = 'rgba(0,0,0,0)';
+            this.ctx.strokeStyle = color;
+            this.ctx.fill();
+            this.ctx.stroke();
+        },
         this.clear = function(){
         	this.ctx.clearRect(0, 0, this.w, this.h); //清除画布，左上角为起点
         }
@@ -108,6 +151,12 @@
                 this.status.rectArr.forEach(function(val) {
                     t.drawRect(val.realX, val.realY, val.width, val.height, val.radius, val.color, val.lineWidth)
                 })
+            }
+            if (this.status.circleArr.length > 0) {
+                this.status.circleArr.forEach(function(val) {
+                    t.drawEllipse(val.x, val.y, val.a, val.b, val.color, val.lineWidth)
+                })
+
             }
         }
 	}

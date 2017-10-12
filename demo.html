@@ -21,7 +21,7 @@
 		<p id="draw">拖动图片</p>
 	</div>
 	<div class="option">
-		<span>边框粗细：</span>
+		<span>矩形边框粗细：</span>
 		<select onchange="changeRectLength()" id="rectLength">
 			<option value="2">细</option>
 			<option value="4">中</option>
@@ -48,17 +48,39 @@
 			<option style="background-color: #37a45d" value="#37a45d"></option>
 		</select>
 	</div>
-	
+	<div class="option">
+		<span>圆形边框粗细：</span>
+		<select onchange="changeCircleLength()" id="circleLength">
+			<option value="2">细</option>
+			<option value="4">中</option>
+			<option value="6">粗</option>
+		</select>
+		<span>圆形颜色：</span>
+		<select style="background-color: #6FE1DC" onchange="changeCircleColor()" id="circleColor">
+			<option style="background-color: #6FE1DC" value="#6FE1DC"></option>
+			<option style="background-color: #7ec0ee" value="#7ec0ee"></option>
+			<option style="background-color: #ffd0d0" value="#ffd0d0"></option>
+			<option style="background-color: #e283ff" value="#e283ff"></option>
+			<option style="background-color: #1b3847" value="#1b3847"></option>
+			<option style="background-color: #fe626d" value="#fe626d"></option>
+			<option style="background-color: #f4a931" value="#f4a931"></option>
+			<option style="background-color: #975cfd" value="#975cfd"></option>
+			<option style="background-color: #37a45d" value="#37a45d"></option>
+		</select>
+	</div>
 
 </body>
 <script src="./Ypaint.js"></script>
 <script>
-
+	
 	var paint = Ypaint(document.getElementById('canvas'))
 
 	var rectLength = document.getElementById('rectLength')
 	var rectRadius = document.getElementById('rectRadius')
 	var rectColor = document.getElementById('rectColor')
+
+	var circleLength = document.getElementById('circleLength')
+	var circleColor = document.getElementById('circleColor')
 
 	document.getElementById('rect').addEventListener('click',function(){
 		paint.isRect = !paint.isRect;
@@ -72,28 +94,44 @@
 	document.getElementById('arrow').addEventListener('click',function(){
 		paint.isArrow = !paint.isArrow;
 	})
-	//处理画正方形的参数
-	
 
-	var length = rectLength.options[rectLength.selectedIndex].value;
-	var radius = parseInt(rectRadius.options[rectRadius.selectedIndex].value);
-	var color = rectColor.options[rectColor.selectedIndex].value;
-	paint.outerParams.rect.lineWidth = length;
-	paint.outerParams.rect.radius = radius;
-	paint.outerParams.rect.color = color;
+	//rect params
+	var Rlength = parseInt(rectLength.options[rectLength.selectedIndex].value);
+	var Rradius = parseInt(rectRadius.options[rectRadius.selectedIndex].value);
+	var Rcolor = rectColor.options[rectColor.selectedIndex].value;
+	//circle params
+	var Clength = parseInt(circleLength.options[circleLength.selectedIndex].value)
+	var Ccolor = circleColor.options[circleColor.selectedIndex].value;
+
+	paint.outerParams.rect.lineWidth = Rlength;
+	paint.outerParams.rect.radius = Rradius;
+	paint.outerParams.rect.color = Rcolor;
+
+	paint.outerParams.circle.lineWidth = Clength;
+	paint.outerParams.circle.color = Ccolor;
+
 	function changeRectLength(){
-		length = rectLength.options[rectLength.selectedIndex].value;
-		paint.outerParams.rect.lineWidth = length;
+		Rlength = parseInt(rectLength.options[rectLength.selectedIndex].value);
+		paint.outerParams.rect.lineWidth = Rlength;
 	}
 	function changeRectRadius(){
-		radius = parseInt(rectRadius.options[rectRadius.selectedIndex].value);
-		paint.outerParams.rect.radius = radius;
+		Rradius = parseInt(rectRadius.options[rectRadius.selectedIndex].value);
+		paint.outerParams.rect.radius = Rradius;
 	}
 	function changeRectColor(){
-		color = rectColor.options[rectColor.selectedIndex].value;
-		rectColor.style.backgroundColor = color;
-		paint.outerParams.rect.color = color;
+		Rcolor = rectColor.options[rectColor.selectedIndex].value;
+		rectColor.style.backgroundColor = Rcolor;
+		paint.outerParams.rect.color = Rcolor;
 	}
 
+	function changeCircleLength(){
+		Clength = parseInt(circleLength.options[circleLength.selectedIndex].value)
+		paint.outerParams.circle.lineWidth = Clength;
+	}
+	function changeCircleColor(){
+		Ccolor = circleColor.options[circleColor.selectedIndex].value;
+		circleColor.style.backgroundColor = Ccolor;
+		paint.outerParams.circle.color = Ccolor;
+	}
 </script>
 </html>
