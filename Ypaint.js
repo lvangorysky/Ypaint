@@ -2,7 +2,12 @@
 	console.log("\n %c APlayer 1.6.1 %c http://aplayer.js.org \n\n","color: #fadfa3; background: #030307; padding:5px 0;","background: #fadfa3; padding:5px 0;");
 	function Ypaint(){
 		this.init = function(canvas){
-			this.outer
+			this.outerParams= {
+				rect:{},
+				circle:{},
+				line:{},
+				arrow:{},
+			}
 			this.isLine = false,
             this.isArrow = false,
             this.isRect = false,
@@ -61,14 +66,14 @@
 			            }
 			            t.clear();
 			            t.redrawAll();
-			            t.drawRect(t.rect.realX, t.rect.realY, t.rect.width, t.rect.height, t.rect.radius, t.rect.color,t.rect.lineWidth);
+			            t.drawRect(t.rect.realX, t.rect.realY, t.rect.width, t.rect.height, t.outerParams.rect.radius, t.outerParams.rect.color,t.outerParams.rect.lineWidth);
 					}			
 				}
 			}
 
 			this.canvas['on' + t.EndEvent] = function(e) {
 				if(t.isRect){
-					t.status.rectArr.push({ realX: t.rect.realX, realY: t.rect.realY, width: t.rect.width, height: t.rect.height, radius: t.rect.radius, color: t.rect.color, lineWidth: t.rect.lineWidth});
+					t.status.rectArr.push({ realX: t.rect.realX, realY: t.rect.realY, width: t.rect.width, height: t.rect.height, radius: t.outerParams.rect.radius, color: t.outerParams.rect.color, lineWidth: t.outerParams.rect.lineWidth});
 					t.rect = {};
 				}
 				t.lock = false;
@@ -76,7 +81,6 @@
 		}
 
 		this.createRect = function(x, y, width, height, radius, color, type ,lineWidth) { //绘制圆
-			console.log(x,y,width,height,radius,color,type,lineWidth)
             this.ctx.beginPath();
             this.ctx.moveTo(x, y + radius);
             this.ctx.lineTo(x, y + height - radius);
@@ -102,7 +106,6 @@
         	var t = this;
         	if (this.status.rectArr.length > 0) {
                 this.status.rectArr.forEach(function(val) {
-                	console.log(val)
                     t.drawRect(val.realX, val.realY, val.width, val.height, val.radius, val.color, val.lineWidth)
                 })
             }

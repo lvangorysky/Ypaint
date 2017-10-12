@@ -76,23 +76,23 @@
 	
 
 	var length = rectLength.options[rectLength.selectedIndex].value;
-	var radius = rectRadius.options[rectRadius.selectedIndex].value;
+	var radius = parseInt(rectRadius.options[rectRadius.selectedIndex].value);
 	var color = rectColor.options[rectColor.selectedIndex].value;
-	paint.rect.lineWidth = length;
-	paint.rect.radius = radius;
-	paint.rect.color = color;
+	paint.outerParams.rect.lineWidth = length;
+	paint.outerParams.rect.radius = radius;
+	paint.outerParams.rect.color = color;
 	function changeRectLength(){
 		length = rectLength.options[rectLength.selectedIndex].value;
-		paint.rect.lineWidth = length;
+		paint.outerParams.rect.lineWidth = length;
 	}
 	function changeRectRadius(){
-		radius = rectRadius.options[rectRadius.selectedIndex].value;
-		paint.rect.radius = radius;
+		radius = parseInt(rectRadius.options[rectRadius.selectedIndex].value);
+		paint.outerParams.rect.radius = radius;
 	}
 	function changeRectColor(){
 		color = rectColor.options[rectColor.selectedIndex].value;
 		rectColor.style.backgroundColor = color;
-		paint.rect.color = color;
+		paint.outerParams.rect.color = color;
 	}
 
 </script>
