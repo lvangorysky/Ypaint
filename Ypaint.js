@@ -1,6 +1,10 @@
 (function(){
-	console.log("\n %c APlayer 1.6.1 %c http://aplayer.js.org \n\n","color: #fadfa3; background: #030307; padding:5px 0;","background: #fadfa3; padding:5px 0;");
-	function Ypaint(){
+	console.log("\n %c Ypaint 1.0.1 %c \n\n","color: #fadfa3; background: #030307; padding:5px 0;","background: #fadfa3; padding:5px 0;");
+	CONST = {
+        edgeLen: 25,
+        angle: 15
+    };
+    function Ypaint(){
 		this.init = function(canvas){
 			this.outerParams= {
 				rect:{},
@@ -54,7 +58,7 @@
                 } else if (t.isLine) {
                     t.movePoint(_x, _y);
                     t.drawPoint(t.lineX, t.lineY, t.clickDrag, t.outerParams.line.lineWidth, t.outerParams.line.color);
-                } else if (t.drawArrow) {
+                } else if (t.isArrow) {
                     t.beginPoint.x = _x;
                     t.beginPoint.y = _y;
                 } 
@@ -97,6 +101,14 @@
                     } else if (t.isLine) {
                         t.movePoint(e.offsetX, e.offsetY, true);
                         t.drawPoint(t.lineX, t.lineY, t.clickDrag, t.lineWidth, t.outerParams.line.color);
+                    } else if (t.isArrow) {
+                        t.stopPoint.x = e.offsetX;
+                        t.stopPoint.y = e.offsetY;
+                        t.clear();
+                        t.redrawAll();
+                        t.arrowCoord(t.beginPoint, t.stopPoint, t.outerParams.arrow.range);
+                        t.sideCoord();
+                        t.drawArrow(t.outerParams.arrow.color);
                     }  			
 				}
 			}
@@ -119,13 +131,21 @@
                     var lineX = Math.abs(t.storage.x - e.offsetX) / 2;
                     var lineY = Math.abs(t.storage.y - e.offsetY) / 2;
                     t.status.circleArr.push({ x: pointX, y: pointY, a: lineX, b: lineY, color: t.outerParams.circle.color, lineWidth: t.outerParams.circle.lineWidth});
-                    console.log(t.status)
                     t.storage = {};
                 } else if (t.isLine) {
                     t.status.lineArr.push({ x: t.lineX, y: t.lineY, clickDrag: t.clickDrag, lineWidth: t.outerParams.line.lineWidth, color: t.outerParams.line.color})
                     t.lineX = [];
                     t.lineY = [];
                     t.clickDrag = [];
+                } else if (t.drawArrow) {
+                    var tempObj = {
+                        beginPoint: t.beginPoint,
+                        stopPoint: { x: e.offsetX, y: e.offsetY },
+                        range: t.outerParams.arrow.range,
+                        color: t.outerParams.arrow.color
+                    }
+                    t.status.arrowArr.push(tempObj);
+                    t.beginPoint = {};
                 } 
 				t.lock = false;
 			}
@@ -150,6 +170,41 @@
                 this.ctx.closePath();
                 this.ctx.stroke();
             }
+        },
+        this.getRadian = function(beginPoint, stopPoint) {
+            this.angle = Math.atan2(stopPoint.y - beginPoint.y, stopPoint.x - beginPoint.x) / Math.PI * 180;
+        },
+        this.arrowCoord = function(beginPoint, stopPoint, range) {
+            this.polygonVertex[0] = beginPoint.x;
+            this.polygonVertex[1] = beginPoint.y;
+            this.polygonVertex[6] = stopPoint.x;
+            this.polygonVertex[7] = stopPoint.y;
+            this.getRadian(beginPoint, stopPoint);
+            this.polygonVertex[8] = stopPoint.x - CONST.edgeLen * Math.cos(Math.PI / 180 * (this.angle + range));
+            this.polygonVertex[9] = stopPoint.y - CONST.edgeLen * Math.sin(Math.PI / 180 * (this.angle + range));
+            this.polygonVertex[4] = stopPoint.x - CONST.edgeLen * Math.cos(Math.PI / 180 * (this.angle - range));
+            this.polygonVertex[5] = stopPoint.y - CONST.edgeLen * Math.sin(Math.PI / 180 * (this.angle - range));
+        },
+        this.sideCoord = function() {
+            var midpoint = {};
+            midpoint.x = (this.polygonVertex[4] + this.polygonVertex[8]) / 2;
+            midpoint.y = (this.polygonVertex[5] + this.polygonVertex[9]) / 2;
+            this.polygonVertex[2] = (this.polygonVertex[4] + midpoint.x) / 2;
+            this.polygonVertex[3] = (this.polygonVertex[5] + midpoint.y) / 2;
+            this.polygonVertex[10] = (this.polygonVertex[8] + midpoint.x) / 2;
+            this.polygonVertex[11] = (this.polygonVertex[9] + midpoint.y) / 2;
+        },
+        this.drawArrow = function(color) {
+            this.ctx.fillStyle = color;
+            this.ctx.beginPath();
+            this.ctx.moveTo(this.polygonVertex[0], this.polygonVertex[1]);
+            this.ctx.lineTo(this.polygonVertex[2], this.polygonVertex[3]);
+            this.ctx.lineTo(this.polygonVertex[4], this.polygonVertex[5]);
+            this.ctx.lineTo(this.polygonVertex[6], this.polygonVertex[7]);
+            this.ctx.lineTo(this.polygonVertex[8], this.polygonVertex[9]);
+            this.ctx.lineTo(this.polygonVertex[10], this.polygonVertex[11]);
+            this.ctx.closePath();
+            this.ctx.fill();
         },
 		this.createRect = function(x, y, width, height, radius, color, type ,lineWidth) { //绘制圆
             this.ctx.beginPath();
@@ -198,6 +253,15 @@
             if (this.status.lineArr.length > 0) {
                 this.status.lineArr.forEach(function(val, index) {
                     t.drawPoint(val.x, val.y, val.clickDrag, val.lineWidth, val.color);
+                })
+            }
+            if (this.status.arrowArr.length > 0) {
+                this.status.arrowArr.forEach(function(val, index) {
+                    if (val.beginPoint != {}) {
+                        t.arrowCoord(val.beginPoint, val.stopPoint, val.range);
+                        t.sideCoord();
+                        t.drawArrow(val.color);
+                    }
                 })
             }
         }

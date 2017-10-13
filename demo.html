@@ -92,9 +92,9 @@
 	<div>
 		<span>箭头大小：</span>
 		<select onchange="changeArrowRange()" id="arrowRange">
-			<option value="2">细</option>
-			<option value="4">中</option>
-			<option value="6">粗</option>
+			<option value="10">细</option>
+			<option value="25">中</option>
+			<option value="40">粗</option>
 		</select>
 		<span>箭头颜色：</span>
 		<select style="background-color: #6FE1DC" onchange="changeArrowColor()" id="arrowColor">
@@ -124,6 +124,9 @@
 
 	var paintLength = document.getElementById('paintLength')
 	var paintColor = document.getElementById('paintColor')
+
+	var arrowRange = document.getElementById('arrowRange')
+	var arrowColor = document.getElementById('arrowColor')
 
 	document.getElementById('rect').addEventListener('click',function(){
 		paint.isRect = !paint.isRect;
@@ -155,11 +158,14 @@
 	var Rradius = parseInt(rectRadius.options[rectRadius.selectedIndex].value);
 	var Rcolor = rectColor.options[rectColor.selectedIndex].value;
 	//circle params
-	var Clength = parseInt(circleLength.options[circleLength.selectedIndex].value)
+	var Clength = parseInt(circleLength.options[circleLength.selectedIndex].value);
 	var Ccolor = circleColor.options[circleColor.selectedIndex].value;
 	//paint params
-	var Plength = parseInt(paintLength.options[paintLength.selectedIndex].value)
+	var Plength = parseInt(paintLength.options[paintLength.selectedIndex].value);
 	var Pcolor =  paintColor.options[paintColor.selectedIndex].value;
+
+	var Arange = parseInt(arrowRange.options[arrowRange.selectedIndex].value);
+	var Acolor = arrowColor.options[arrowColor.selectedIndex].value;
 
 	paint.outerParams.rect.lineWidth = Rlength;
 	paint.outerParams.rect.radius = Rradius;
@@ -170,6 +176,9 @@
 
 	paint.outerParams.line.lineWidth = Plength;	
 	paint.outerParams.line.color = Pcolor;
+
+	paint.outerParams.arrow.range = Arange;
+	paint.outerParams.arrow.color = Acolor;
 
 	function changeRectLength(){
 		Rlength = parseInt(rectLength.options[rectLength.selectedIndex].value);
@@ -207,6 +216,15 @@
 		paint.outerParams.line.color = Pcolor;
 	}
 
+	function changeArrowRange(){
+		Arange = parseInt(arrowRange.options[arrowRange.selectedIndex].value);
+		paint.outerParams.arrow.range = Arange;
+	}
+	function changeArrowColor(){
+		Acolor =  arrowColor.options[arrowColor.selectedIndex].value;
+		arrowColor.style.backgroundColor = Acolor;
+		paint.outerParams.arrow.color = Acolor;
+	}
 
 </script>
 </html>
