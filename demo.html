@@ -68,7 +68,47 @@
 			<option style="background-color: #37a45d" value="#37a45d"></option>
 		</select>
 	</div>
+	<div>
+		<span>画笔粗细：</span>
+		<select onchange="changePaintLength()" id="paintLength">
+			<option value="2">细</option>
+			<option value="4">中</option>
+			<option value="6">粗</option>
+		</select>
+		<span>画笔颜色：</span>
+		<select style="background-color: #6FE1DC" onchange="changePaintColor()" id="paintColor">
+			<option style="background-color: #6FE1DC" value="#6FE1DC"></option>
+			<option style="background-color: #7ec0ee" value="#7ec0ee"></option>
+			<option style="background-color: #ffd0d0" value="#ffd0d0"></option>
+			<option style="background-color: #e283ff" value="#e283ff"></option>
+			<option style="background-color: #1b3847" value="#1b3847"></option>
+			<option style="background-color: #fe626d" value="#fe626d"></option>
+			<option style="background-color: #f4a931" value="#f4a931"></option>
+			<option style="background-color: #975cfd" value="#975cfd"></option>
+			<option style="background-color: #37a45d" value="#37a45d"></option>
+		</select>
+	</div>
 
+	<div>
+		<span>箭头大小：</span>
+		<select onchange="changeArrowRange()" id="arrowRange">
+			<option value="2">细</option>
+			<option value="4">中</option>
+			<option value="6">粗</option>
+		</select>
+		<span>箭头颜色：</span>
+		<select style="background-color: #6FE1DC" onchange="changeArrowColor()" id="arrowColor">
+			<option style="background-color: #6FE1DC" value="#6FE1DC"></option>
+			<option style="background-color: #7ec0ee" value="#7ec0ee"></option>
+			<option style="background-color: #ffd0d0" value="#ffd0d0"></option>
+			<option style="background-color: #e283ff" value="#e283ff"></option>
+			<option style="background-color: #1b3847" value="#1b3847"></option>
+			<option style="background-color: #fe626d" value="#fe626d"></option>
+			<option style="background-color: #f4a931" value="#f4a931"></option>
+			<option style="background-color: #975cfd" value="#975cfd"></option>
+			<option style="background-color: #37a45d" value="#37a45d"></option>
+		</select>
+	</div>
 </body>
 <script src="./Ypaint.js"></script>
 <script>
@@ -81,6 +121,9 @@
 
 	var circleLength = document.getElementById('circleLength')
 	var circleColor = document.getElementById('circleColor')
+
+	var paintLength = document.getElementById('paintLength')
+	var paintColor = document.getElementById('paintColor')
 
 	document.getElementById('rect').addEventListener('click',function(){
 		paint.isRect = !paint.isRect;
@@ -114,6 +157,9 @@
 	//circle params
 	var Clength = parseInt(circleLength.options[circleLength.selectedIndex].value)
 	var Ccolor = circleColor.options[circleColor.selectedIndex].value;
+	//paint params
+	var Plength = parseInt(paintLength.options[paintLength.selectedIndex].value)
+	var Pcolor =  paintColor.options[paintColor.selectedIndex].value;
 
 	paint.outerParams.rect.lineWidth = Rlength;
 	paint.outerParams.rect.radius = Rradius;
@@ -121,6 +167,9 @@
 
 	paint.outerParams.circle.lineWidth = Clength;
 	paint.outerParams.circle.color = Ccolor;
+
+	paint.outerParams.line.lineWidth = Plength;	
+	paint.outerParams.line.color = Pcolor;
 
 	function changeRectLength(){
 		Rlength = parseInt(rectLength.options[rectLength.selectedIndex].value);
@@ -136,6 +185,7 @@
 		paint.outerParams.rect.color = Rcolor;
 	}
 
+
 	function changeCircleLength(){
 		Clength = parseInt(circleLength.options[circleLength.selectedIndex].value)
 		paint.outerParams.circle.lineWidth = Clength;
@@ -145,5 +195,18 @@
 		circleColor.style.backgroundColor = Ccolor;
 		paint.outerParams.circle.color = Ccolor;
 	}
+
+
+	function changePaintLength(){
+		Plength = parseInt(paintLength.options[paintLength.selectedIndex].value)
+		paint.outerParams.line.lineWidth = Plength;	
+	}
+	function changePaintColor(){
+		Pcolor =  paintColor.options[paintColor.selectedIndex].value;
+		paintColor.style.backgroundColor = Pcolor;
+		paint.outerParams.line.color = Pcolor;
+	}
+
+
 </script>
 </html>

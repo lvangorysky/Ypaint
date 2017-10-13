@@ -21,8 +21,11 @@
             this.StartEvent = this.touch ? "touchstart" : "mousedown";
             this.MoveEvent = this.touch ? "touchmove" : "mousemove";
             this.EndEvent = this.touch ? "touchend" : "mouseup";
+            this.clickDrag = [];
+            this.lineX = [];
+            this.lineY = [];
             this.beginPoint = {};
-            this.stopPoint = {}; //circle
+            this.stopPoint = {}; 
             this.storage = {};
             this.rect = {}; //
             this.polygonVertex = [];
@@ -48,6 +51,12 @@
                 } else if (t.isCircle) {
                     t.storage.x = _x;
                     t.storage.y = _y;
+                } else if (t.isLine) {
+                    t.movePoint(_x, _y);
+                    t.drawPoint(t.lineX, t.lineY, t.clickDrag, t.outerParams.line.lineWidth, t.outerParams.line.color);
+                } else if (t.drawArrow) {
+                    t.beginPoint.x = _x;
+                    t.beginPoint.y = _y;
                 } 
 			}
 
@@ -85,7 +94,10 @@
                         t.clear();
                         t.redrawAll();
                         t.drawEllipse(pointX, pointY, lineX, lineY, t.outerParams.circle.lineWidth ,t.outerParams.circle.color);
-                    } 			
+                    } else if (t.isLine) {
+                        t.movePoint(e.offsetX, e.offsetY, true);
+                        t.drawPoint(t.lineX, t.lineY, t.clickDrag, t.lineWidth, t.outerParams.line.color);
+                    }  			
 				}
 			}
 
@@ -109,11 +121,36 @@
                     t.status.circleArr.push({ x: pointX, y: pointY, a: lineX, b: lineY, color: t.outerParams.circle.color, lineWidth: t.outerParams.circle.lineWidth});
                     console.log(t.status)
                     t.storage = {};
-                }
+                } else if (t.isLine) {
+                    t.status.lineArr.push({ x: t.lineX, y: t.lineY, clickDrag: t.clickDrag, lineWidth: t.outerParams.line.lineWidth, color: t.outerParams.line.color})
+                    t.lineX = [];
+                    t.lineY = [];
+                    t.clickDrag = [];
+                } 
 				t.lock = false;
 			}
 		}
-
+        this.movePoint = function(x, y) {
+            this.lineX.push(x);
+            this.lineY.push(y);
+            this.clickDrag.push(y);
+        },
+        this.drawPoint = function(x, y, clickDrag, lineWidth, color) {
+            for (var i = 0; i < x.length; i++) //循环数组
+            {
+                this.ctx.beginPath();
+                if (clickDrag[i] && i) {
+                    this.ctx.moveTo(x[i - 1], y[i - 1]);
+                } else {
+                    this.ctx.moveTo(x[i] - 1, y[i]);
+                }
+                this.ctx.lineWidth = lineWidth;
+                this.ctx.strokeStyle = color;
+                this.ctx.lineTo(x[i], y[i]);
+                this.ctx.closePath();
+                this.ctx.stroke();
+            }
+        },
 		this.createRect = function(x, y, width, height, radius, color, type ,lineWidth) { //绘制圆
             this.ctx.beginPath();
             this.ctx.moveTo(x, y + radius);
@@ -157,6 +194,11 @@
                     t.drawEllipse(val.x, val.y, val.a, val.b, val.lineWidth, val.color)
                 })
 
+            }
+            if (this.status.lineArr.length > 0) {
+                this.status.lineArr.forEach(function(val, index) {
+                    t.drawPoint(val.x, val.y, val.clickDrag, val.lineWidth, val.color);
+                })
             }
         }
 	}

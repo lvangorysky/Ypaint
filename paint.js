@@ -259,7 +259,6 @@
                 }
             },
             this.movePoint = function(x, y, dragging) {
-                /*将鼠标坐标添加到各自对应的数组里*/
                 this.x.push(x);
                 this.y.push(y);
                 this.clickDrag.push(y);
@@ -426,7 +425,6 @@
                     this.status.circleArr.forEach(function(val) {
                         t.drawEllipse(val.x, val.y, val.a, val.b, val.radius)
                     })
-
                 }
                 if (this.status.rectArr.length > 0) {
                     this.status.rectArr.forEach(function(val) {
