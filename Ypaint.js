@@ -154,7 +154,7 @@
             }
             if (this.status.circleArr.length > 0) {
                 this.status.circleArr.forEach(function(val) {
-                    t.drawEllipse(val.x, val.y, val.a, val.b, val.color, val.lineWidth)
+                    t.drawEllipse(val.x, val.y, val.a, val.b, val.lineWidth, val.color)
                 })
 
             }

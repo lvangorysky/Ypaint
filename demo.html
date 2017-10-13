@@ -84,15 +84,27 @@
 
 	document.getElementById('rect').addEventListener('click',function(){
 		paint.isRect = !paint.isRect;
+		paint.isCircle = false;
+		paint.isLine = false;
+		paint.isArrow = false;
 	})
 	document.getElementById('circle').addEventListener('click',function(){
 		paint.isCircle = !paint.isCircle;
+		paint.isRect = false;
+		paint.isLine = false;
+		paint.isArrow = false;
 	})
 	document.getElementById('line').addEventListener('click',function(){
 		paint.isLine = !paint.isLine;
+		paint.isRect = false;
+		paint.isCircle = false;
+		paint.isArrow = false;
 	})
 	document.getElementById('arrow').addEventListener('click',function(){
 		paint.isArrow = !paint.isArrow;
+		paint.isRect = false;
+		paint.isCircle = false;
+		paint.isLine = false;
 	})
 
 	//rect params
