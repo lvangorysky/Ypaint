@@ -208,8 +208,8 @@
                             t.redrawAll();
                         }
                     }
-
                 };
+
                 this.canvas['onmouseout'] = this.canvas['on' + t.EndEvent] = function(e) {
                     /*重置数据*/
                     var notInCanvas = e.offsetX > 733 || e.offsetX < 0 || e.offsetY > 453 || e.offsetY < 0;
@@ -549,5 +549,4 @@
         p.drawBg(canvas, data);
         return p;
     };
-    // window.ip = ip;
 })();

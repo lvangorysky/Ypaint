@@ -41,6 +41,30 @@
             };
             this.bind()
 		}
+        this.chooseRect = function(){
+            this.isLine = false;
+            this.isArrow = false;
+            this.isRect = true;
+            this.isCircle = false;
+        }
+        this.chooseCircle = function(){
+            this.isLine = false;
+            this.isArrow = false;
+            this.isRect = false;
+            this.isCircle = true;
+        }
+        this.chooseLine = function(){
+            this.isLine = true;
+            this.isArrow = false;
+            this.isRect = false;
+            this.isCircle = false;
+        }
+        this.chooseArrow = function(){
+            this.isLine = false;
+            this.isArrow = true;
+            this.isRect = false;
+            this.isCircle = false;
+        }
 		this.bind = function(){
 			var t = this;
 			this.canvas['on' + t.StartEvent] = function(e) {
