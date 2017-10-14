@@ -27,7 +27,7 @@
 
 ### 绘制箭头：
 
- `paint.chooseArrow()`
+`paint.chooseArrow()`
 
 #### 箭头其他参数
 
