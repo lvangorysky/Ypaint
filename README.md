@@ -4,13 +4,13 @@
 
 `var paint = Ypaint(canvas)`
 
-##方法参数
+## 方法参数
 
-###圆形： `paint.chooseCircle`
+### 圆形： `paint.chooseCircle`
 
-###圆形： `paint.chooseCircle`
+### 圆形： `paint.chooseCircle`
 
-###圆形： `paint.chooseCircle`
+### 圆形： `paint.chooseCircle`
 
-###圆形： `paint.chooseCircle`
+### 圆形： `paint.chooseCircle`
 
