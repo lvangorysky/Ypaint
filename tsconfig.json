@@ -1,11 +1,8 @@
 {
-  "compilerOptions": {
-    "outDir": "./dist/",
-    "noImplicitAny": false,
-    "module": "es6",
-    "target": "es5",
-    "jsx": "react",
-    "allowJs": true,
-    "moduleResolution": "node"
-  }
+  "module": "commonjs",
+  "target": "es5",
+  "lib": ["es2015", "dom"],
+  "outDir": "lib",
+  "sourceMap": true,
+  "declaration": true
 }

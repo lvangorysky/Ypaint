@@ -1,7 +1,7 @@
 const path = require("path");
 
 module.exports = {
-    mode: 'production',
+    mode: 'development',
     entry: "./src/index.ts",
     module: {
         rules: [
@@ -16,7 +16,9 @@ module.exports = {
         extensions: [".tsx", ".ts", ".js"],
     },
     output: {
+        libraryTarget: 'umd',
+        umdNamedDefine: true,
         filename: "bundle.js",
-        path: path.resolve(__dirname, "dist"),
+        path: path.resolve(__dirname, "lib"),
     },
 };

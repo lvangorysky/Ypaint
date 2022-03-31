@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-29 19:57:50
- * @LastEditTime: 2022-03-30 16:57:57
+ * @LastEditTime: 2022-03-31 14:46:32
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: /Ypaint/test.html
@@ -21,20 +21,29 @@
 </style>
 <body>
 	<canvas id="canvas" width="800" height="600"></canvas>
+	<button onclick="click1()">改变pencil参数</button>
+	<button onclick="click2()">改变rect参数</button>
 </body>
+<!-- <script src="./src/test.js"></script> -->
 <script src="./src/index.js"></script>
 <script>
 	let paint = document.getElementById('canvas')
 	let paint1 = new Paint(paint);
-	paint1.bindDrawWay({
-		drawWay: 'pencil',
-		drawParams: {
-			lineWidth: 4,
-			color: 'red',
-			radius: 2,
-			rectangleType: 'stroke'
-		}
-	});
-	// console.log(Bind)
+	paint1.init({});
+	function click1 () {
+		console.log(11111)
+		paint1.init({
+			lineWidth: 5,
+			color: 'red'
+		})
+	}
+	function click2 () {
+		paint1.init({
+			drawWay: 'rectangle',
+			lineWidth: 5,
+			color: 'red'
+		})
+	}
+	// // console.log(Bind)
 </script>
 </html>
