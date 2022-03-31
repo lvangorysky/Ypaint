@@ -22,10 +22,8 @@ newPaint.init({
 ```
 newPaint.init({
     drawWay: 'pencil',
-    drawParams: {
-        lineWidth: 4, 
-        color: 'red',
-    }
+    lineWidth: 4, 
+    color: 'red',
 });
 ```
 
