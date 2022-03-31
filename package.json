@@ -16,7 +16,7 @@
   "name": "ypaint",
   "description": "canvas draw paint",
   "version": "1.0.0",
-  "main": "src/index.js",
+  "main": "lib/bundle.esm.js",
   "scripts": {
     "dev": "rollup -w -c",
     "build": "rollup -c",

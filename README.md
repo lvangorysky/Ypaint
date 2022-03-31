@@ -27,4 +27,23 @@ newPaint.init({
 });
 ```
 
+### 绘制箭头：
+```
+newPaint.init({
+    drawWay: 'arrow',
+    lineWidth: 4, 
+    color: 'red',
+})
+```
+
+### 绘制圆形：
+```
+newPaint.init({
+    drawWay: 'circel',
+    lineWidth: 4, 
+    color: 'red', 
+    fillColor: 'blue'
+});
+```
+
 

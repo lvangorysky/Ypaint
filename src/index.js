@@ -16,11 +16,12 @@ var __extends = (this && this.__extends) || (function () {
 })();
 exports.__esModule = true;
 // define default params
-var defaultDrawWay = 'pencil';
+var defaultDrawWay = "pencil";
 var defaultLineWidth = 3;
-var defaultColor = '#000000';
+var defaultColor = "#000000";
 var defaultRadius = 0;
-var defaultRectangleType = 'stroke';
+var defaultRectangleType = "stroke";
+var defaultFillColor = "rgba(0, 0, 0, 0)";
 // define params
 var PaintEnviroment = /** @class */ (function () {
     //记录画笔
@@ -54,10 +55,16 @@ var Paint = /** @class */ (function (_super) {
                         Paint.rectangle.x = _x;
                         Paint.rectangle.y = _y;
                         break;
+                    case "circle":
+                        Paint.circle.x = _x;
+                        Paint.circle.y = _y;
+                    case "arrow":
+                        Paint.arrowBeginPoint.x = _x;
+                        Paint.arrowBeginPoint.y = _y;
                 }
             };
         };
-        _this.bindMoveEvent = function (drawWay, drawLineWidth, drawColor, drawRadius, drawRectangleType) {
+        _this.bindMoveEvent = function (drawWay, drawLineWidth, drawColor, drawRadius, drawRectangleType, drawFillColor) {
             _this.canvas["on".concat(Paint.MoveEvent)] = function (e) {
                 if (Paint.isLock) {
                     switch (drawWay) {
@@ -84,11 +91,48 @@ var Paint = /** @class */ (function (_super) {
                             _this.redrawAll();
                             _this.createRect(Paint.rectangle.realX, Paint.rectangle.realY, Paint.rectangle.width, Paint.rectangle.height, drawRadius, drawColor, drawLineWidth, drawRectangleType);
                             break;
+                        case "circle":
+                            var pointX = void 0, pointY = void 0, lineX = void 0, lineY = void 0;
+                            if (Paint.circle.x > e.offsetX) {
+                                pointX =
+                                    Paint.circle.x -
+                                        Math.abs(Paint.circle.x - e.offsetX) / 2;
+                            }
+                            else {
+                                pointX =
+                                    Math.abs(Paint.circle.x - e.offsetX) / 2 +
+                                        Paint.circle.x;
+                            }
+                            if (Paint.circle.y > e.offsetY) {
+                                pointY =
+                                    Paint.circle.y -
+                                        Math.abs(Paint.circle.y - e.offsetY) / 2;
+                            }
+                            else {
+                                pointY =
+                                    Math.abs(Paint.circle.y - e.offsetY) / 2 +
+                                        Paint.circle.y;
+                            }
+                            lineX = Math.abs(Paint.circle.x - e.offsetX) / 2;
+                            lineY = Math.abs(Paint.circle.y - e.offsetY) / 2;
+                            _this.clear();
+                            _this.redrawAll();
+                            _this.drawEllipse(pointX, pointY, lineX, lineY, drawLineWidth, drawColor, drawFillColor);
+                            break;
+                        case 'arrow':
+                            Paint.arrowStopPoint.x = e.offsetX;
+                            Paint.arrowStopPoint.y = e.offsetY;
+                            _this.clear();
+                            _this.redrawAll();
+                            _this.arrowCoord(Paint.arrowBeginPoint, Paint.arrowStopPoint, drawLineWidth);
+                            _this.sideCoord();
+                            _this.drawArrow(drawColor);
+                            break;
                     }
                 }
             };
         };
-        _this.bindEndEvent = function (drawWay, drawLineWidth, drawColor, drawRadius, drawRectangleType) {
+        _this.bindEndEvent = function (drawWay, drawLineWidth, drawColor, drawRadius, drawRectangleType, drawFillColor) {
             _this.canvas["on".concat(Paint.EndEvent)] = function (e) {
                 if (Paint.isLock) {
                     switch (drawWay) {
@@ -116,6 +160,54 @@ var Paint = /** @class */ (function (_super) {
                                 type: drawRectangleType
                             });
                             Paint.rectangle = {};
+                            break;
+                        case "circle":
+                            var pointX = void 0, pointY = void 0, lineX = void 0, lineY = void 0;
+                            if (Paint.circle.x > e.offsetX) {
+                                pointX =
+                                    Paint.circle.x -
+                                        Math.abs(Paint.circle.x - e.offsetX) / 2;
+                            }
+                            else {
+                                pointX =
+                                    Math.abs(Paint.circle.x - e.offsetX) / 2 +
+                                        Paint.circle.x;
+                            }
+                            if (Paint.circle.y > e.offsetY) {
+                                pointY =
+                                    Paint.circle.y -
+                                        Math.abs(Paint.circle.y - e.offsetY) / 2;
+                            }
+                            else {
+                                pointY =
+                                    Math.abs(Paint.circle.y - e.offsetY) / 2 +
+                                        Paint.circle.y;
+                            }
+                            lineX = Math.abs(Paint.circle.x - e.offsetX) / 2;
+                            lineY = Math.abs(Paint.circle.y - e.offsetY) / 2;
+                            Paint.contentList.circleArr.push({
+                                x: pointX,
+                                y: pointY,
+                                a: lineX,
+                                b: lineY,
+                                color: drawColor,
+                                lineWidth: drawLineWidth,
+                                fillColor: drawFillColor
+                            });
+                            Paint.circle = {};
+                            break;
+                        case 'arrow':
+                            var tempObj = {
+                                beginPoint: Paint.arrowBeginPoint,
+                                stopPoint: { x: e.offsetX, y: e.offsetY },
+                                range: drawLineWidth,
+                                color: drawColor
+                            };
+                            Paint.contentList.arrowArr.push(tempObj);
+                            Paint.arrowBeginPoint = {
+                                x: 0,
+                                y: 0
+                            };
                             break;
                     }
                     Paint.isLock = false;
@@ -159,6 +251,55 @@ var Paint = /** @class */ (function (_super) {
                 ctx.stroke();
             }
         };
+        _this.drawEllipse = function (x, y, a, b, lineWidth, color, fillColor) {
+            var ctx = _this.canvas.getContext("2d");
+            ctx.beginPath();
+            ctx.ellipse(x, y, a, b, 0, 0, 2 * Math.PI);
+            ctx.lineWidth = lineWidth;
+            ctx.fillStyle = fillColor;
+            ctx.strokeStyle = color;
+            ctx.fill();
+            ctx.stroke();
+        };
+        _this.arrowCoord = function (beginPoint, stopPoint, range) {
+            Paint.polygonVertex[0] = beginPoint.x;
+            Paint.polygonVertex[1] = beginPoint.y;
+            Paint.polygonVertex[6] = stopPoint.x;
+            Paint.polygonVertex[7] = stopPoint.y;
+            _this.getRadian(beginPoint, stopPoint);
+            Paint.polygonVertex[8] = stopPoint.x - 25 * Math.cos(Math.PI / 180 * (Paint.angle + range));
+            Paint.polygonVertex[9] = stopPoint.y - 25 * Math.sin(Math.PI / 180 * (Paint.angle + range));
+            Paint.polygonVertex[4] = stopPoint.x - 25 * Math.cos(Math.PI / 180 * (Paint.angle - range));
+            Paint.polygonVertex[5] = stopPoint.y - 25 * Math.sin(Math.PI / 180 * (Paint.angle - range));
+        };
+        _this.getRadian = function (beginPoint, stopPoint) {
+            Paint.angle = Math.atan2(stopPoint.y - beginPoint.y, stopPoint.x - beginPoint.x) / Math.PI * 180;
+        };
+        _this.sideCoord = function () {
+            var midpoint = {
+                x: 0,
+                y: 0
+            };
+            midpoint.x = (Paint.polygonVertex[4] + Paint.polygonVertex[8]) / 2;
+            midpoint.y = (Paint.polygonVertex[5] + Paint.polygonVertex[9]) / 2;
+            Paint.polygonVertex[2] = (Paint.polygonVertex[4] + midpoint.x) / 2;
+            Paint.polygonVertex[3] = (Paint.polygonVertex[5] + midpoint.y) / 2;
+            Paint.polygonVertex[10] = (Paint.polygonVertex[8] + midpoint.x) / 2;
+            Paint.polygonVertex[11] = (Paint.polygonVertex[9] + midpoint.y) / 2;
+        };
+        _this.drawArrow = function (color) {
+            var ctx = _this.canvas.getContext("2d");
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.moveTo(Paint.polygonVertex[0], Paint.polygonVertex[1]);
+            ctx.lineTo(Paint.polygonVertex[2], Paint.polygonVertex[3]);
+            ctx.lineTo(Paint.polygonVertex[4], Paint.polygonVertex[5]);
+            ctx.lineTo(Paint.polygonVertex[6], Paint.polygonVertex[7]);
+            ctx.lineTo(Paint.polygonVertex[8], Paint.polygonVertex[9]);
+            ctx.lineTo(Paint.polygonVertex[10], Paint.polygonVertex[11]);
+            ctx.closePath();
+            ctx.fill();
+        };
         _this.createRect = function (x, y, width, height, radius, color, lineWidth, type) {
             if (type === void 0) { type = "stroke"; }
             var ctx = _this.canvas.getContext("2d");
@@ -198,6 +339,18 @@ var Paint = /** @class */ (function (_super) {
                 Paint.contentList.lineArr.forEach(function (val) {
                     _this.drawPoint(val.x, val.y, val.clickDrag, val.lineWidth, val.color);
                 });
+            Paint.contentList.circleArr.length > 0 &&
+                Paint.contentList.circleArr.forEach(function (val) {
+                    _this.drawEllipse(val.x, val.y, val.a, val.b, val.lineWidth, val.color, val.fillColor);
+                });
+            Paint.contentList.arrowArr.length > 0 &&
+                Paint.contentList.arrowArr.forEach(function (val) {
+                    if (val.beginPoint && val.beginPoint.x) {
+                        _this.arrowCoord(val.beginPoint, val.stopPoint, val.range);
+                        _this.sideCoord();
+                        _this.drawArrow(val.color);
+                    }
+                });
         };
         return _this;
     }
@@ -207,8 +360,8 @@ var Paint = /** @class */ (function (_super) {
     };
     Paint.prototype.bindDrawFunc = function () {
         this.bindStartEvent(Paint.drawWay, Paint.lineWidth, Paint.color);
-        this.bindMoveEvent(Paint.drawWay, Paint.lineWidth, Paint.color, Paint.radius, Paint.rectangleType);
-        this.bindEndEvent(Paint.drawWay, Paint.lineWidth, Paint.color, Paint.radius, Paint.rectangleType);
+        this.bindMoveEvent(Paint.drawWay, Paint.lineWidth, Paint.color, Paint.radius, Paint.rectangleType, Paint.fillColor);
+        this.bindEndEvent(Paint.drawWay, Paint.lineWidth, Paint.color, Paint.radius, Paint.rectangleType, Paint.fillColor);
     };
     Paint.prototype.bindDrawOptions = function (params) {
         Paint.drawWay = params.drawWay || defaultDrawWay;
@@ -216,18 +369,27 @@ var Paint = /** @class */ (function (_super) {
         Paint.color = params.color || defaultColor;
         Paint.radius = params.radius || defaultRadius;
         Paint.rectangleType = params.rectangleType || defaultRectangleType;
+        Paint.fillColor = params.fillColor || defaultFillColor;
     };
     Paint.isLock = false; // 鼠标是否在被拖动
     // 铅笔参数
     Paint.clickDrag = [];
     Paint.lineX = [];
     Paint.lineY = [];
-    // 矩形参数
+    // rect params
     Paint.rectangle = {};
+    // circle params
+    Paint.circle = {};
+    //arrow params
+    Paint.arrowBeginPoint = {};
+    Paint.arrowStopPoint = {};
+    Paint.polygonVertex = [];
     // redraw array
     Paint.contentList = {
         lineArr: [],
-        rectArr: []
+        rectArr: [],
+        circleArr: [],
+        arrowArr: []
     };
     return Paint;
 }(PaintEnviroment));

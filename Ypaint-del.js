@@ -118,7 +118,7 @@
                             var pointY = Math.abs(t.storage.y - e.offsetY) / 2 + t.storage.y;
                         }
                         var lineX = Math.abs(t.storage.x - e.offsetX) / 2;
-                        var lineY = Math.abs(t.storage.y - e.offsetY) / 2
+                        var lineY = Math.abs(t.storage.y - e.offsetY) / 2;
                         t.clear();
                         t.redrawAll();
                         t.drawEllipse(pointX, pointY, lineX, lineY, t.outerParams.circle.lineWidth ,t.outerParams.circle.color);
