@@ -1,9 +1,15 @@
 # Ypaint
 
+## 引入
+npm i ypaint
+
 ## 使用方法
 
-`import paint from 'Ypaint'`
-`const newPaint = new Paint(paint);`
+```
+import paint from 'ypaint'
+const newPaint = new Paint(paint);
+
+```
 
 ## 方法参数
 
