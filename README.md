@@ -6,8 +6,10 @@ npm i ypaint
 ## 使用方法
 
 ```
-import paint from 'ypaint'
-const newPaint = new Paint(paint);
+import Paint from 'ypaint'
+
+let paint = document.getElementById('canvas')
+let newPaint = new Paint(paint);
 
 ```
 
