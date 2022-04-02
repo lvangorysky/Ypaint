@@ -19,12 +19,12 @@ class PaintEnviroment {
 }
 
 interface DrawOptions {
-    drawWay: string;
-    lineWidth: number;
-    color: string;
-    radius: number;
-    rectangleType: string;
-    fillColor: string;
+    drawWay?: string;
+    lineWidth?: number;
+    color?: string;
+    radius?: number;
+    rectangleType?: string;
+    fillColor?: string;
 }
 class Paint extends PaintEnviroment {
     static isLock: boolean = false; // 鼠标是否在被拖动
